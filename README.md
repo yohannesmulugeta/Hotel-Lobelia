@@ -1,26 +1,43 @@
-# Hotel Lobelia — Scrolling Website Concept
+# Hotel Lobelia — Cinematic Scrolling Redesign
 
-A cinematic, mobile-first redesign concept for Hotel Lobelia in Bole, Addis Ababa.
+A Next.js + React scrolling website concept for Hotel Lobelia in Bole, Addis Ababa.
+
+## Stack
+
+- Next.js App Router
+- React + TypeScript
+- Tailwind CSS
+- GSAP + ScrollTrigger
+- Lenis
+- GitHub Pages static export
 
 ## Experience
 
-- Scroll-led arrival journey from the exterior to the bedroom
-- Four real Hotel Lobelia room types
-- Horizontal interior gallery
-- Amenities, nearby places, contact details and live booking links
-- Responsive design with reduced-motion accessibility
-- Static, dependency-free build for fast loading and simple hosting
+- Cinematic parallax hero
+- Scroll-controlled arrival journey
+- Sticky photo transitions from exterior to bedroom
+- Responsive room gallery
+- Horizontal pinned interior gallery on desktop
+- Mobile scroll-snap fallbacks
+- Reduced-motion accessibility
 
-## Run locally
+## Development
 
-Open `dist/index.html` in a browser or serve the `dist` directory with any static file server.
+```bash
+npm install
+npm run dev
+```
 
-## Content sources
+## Build
 
-Hotel information, contact details and photographs are based on the publicly available Hotel Lobelia website:
+```bash
+npm run build
+```
 
-- https://www.hotellobeliaaddis.com/
-- https://www.hotellobeliaaddis.com/rooms.html
-- https://www.hotellobeliaaddis.com/gallery.html
+The project uses Next.js static export and GitHub Actions publishes the generated `out/` directory to GitHub Pages.
 
-This repository is a portfolio redesign concept. Permission should be obtained from Hotel Lobelia before using its brand assets or photographs for a commercial launch.
+## Content source
+
+Hotel information and photography are currently based on publicly available Hotel Lobelia material for this redesign concept.
+
+Commercial launch should use approved brand assets and licensed/authorized photography.
