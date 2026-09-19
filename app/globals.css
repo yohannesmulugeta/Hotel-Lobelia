@@ -1594,6 +1594,33 @@ h1, h2, h3 {
   will-change: transform;
 }
 
+.cinema-frame-main {
+  position: relative;
+  z-index: 1;
+}
+
+.cinema-frame-backdrop {
+  position: absolute;
+  inset: -5%;
+  z-index: 0;
+  width: 110% !important;
+  height: 110% !important;
+  object-fit: cover !important;
+  filter: blur(28px) brightness(.68) saturate(.9);
+  transform: scale(1.06);
+}
+
+.cinema-frame.is-opening .cinema-frame-main {
+  object-fit: contain;
+  padding: 0 2.2vw;
+}
+
+.cinema-frame.is-opening .cinema-shade {
+  background:
+    linear-gradient(90deg, rgba(2,10,7,.90) 0%, rgba(2,10,7,.66) 28%, rgba(2,10,7,.26) 52%, rgba(2,10,7,.04) 76%),
+    linear-gradient(0deg, rgba(2,10,7,.78) 0%, rgba(2,10,7,.18) 44%, transparent 72%);
+}
+
 .cinema-shade {
   z-index: 2;
   background:
@@ -1661,11 +1688,12 @@ h1, h2, h3 {
 .cinema-copy > span {
   display: inline-block;
   margin-bottom: .9rem;
-  color: var(--leaf);
+  color: #d7f09f;
   font-size: .65rem;
   font-weight: 700;
   letter-spacing: .16em;
   text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(0,0,0,.5);
 }
 
 .cinema-copy h2 {
@@ -1674,14 +1702,16 @@ h1, h2, h3 {
   letter-spacing: -.065em;
   line-height: .82;
   text-wrap: balance;
+  text-shadow: 0 3px 22px rgba(0,0,0,.42);
 }
 
 .cinema-copy p {
   max-width: 460px;
   margin: 1.25rem 0 0;
-  color: rgba(255,255,255,.68);
+  color: rgba(255,255,255,.86);
   font-size: .85rem;
   line-height: 1.72;
+  text-shadow: 0 2px 14px rgba(0,0,0,.46);
 }
 
 .cinema-bottom {
@@ -1793,5 +1823,18 @@ h1, h2, h3 {
   .cinema-frame:not(:first-child),
   .cinema-copy:not(:first-child) {
     display: none;
+  }
+}
+
+
+@media (max-width: 720px) {
+  .cinema-frame.is-opening .cinema-frame-main {
+    object-fit: cover;
+    padding: 0;
+  }
+
+  .cinema-frame.is-opening .cinema-shade {
+    background:
+      linear-gradient(0deg, rgba(2,10,7,.92) 0%, rgba(2,10,7,.48) 48%, rgba(2,10,7,.12) 100%);
   }
 }
