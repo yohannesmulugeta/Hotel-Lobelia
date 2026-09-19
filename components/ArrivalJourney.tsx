@@ -33,7 +33,6 @@ const scenes = [
     copy: "The entrance becomes the transition point between busy Bole and a quieter place to stay.",
     image: "sequence/03-entrance-close.png",
     position: "50% 50%",
-    zoom: true,
   },
   {
     number: "04",
@@ -79,7 +78,6 @@ const scenes = [
     copy: "The room becomes more intimate as the journey settles into rest.",
     image: "sequence/08-bedroom-close.png",
     position: "50% 50%",
-    zoom: true,
   },
   {
     number: "09",
@@ -89,7 +87,6 @@ const scenes = [
     copy: "The journey ends here—with a quiet room and a bed ready when you are.",
     image: "sequence/09-bed-detail.png",
     position: "50% 50%",
-    zoom: true,
   },
 ];
 
@@ -107,14 +104,20 @@ export default function ArrivalJourney() {
     const ctx = gsap.context(() => {
       const frames = gsap.utils.toArray<HTMLElement>(".cinema-frame");
       const copies = gsap.utils.toArray<HTMLElement>(".cinema-copy");
+      const images = frames
+        .map((frame) => frame.querySelector("img"))
+        .filter(Boolean) as HTMLImageElement[];
 
-      gsap.set(frames, { autoAlpha: 0, scale: 1.055 });
-      gsap.set(copies, { autoAlpha: 0, y: 26 });
-      gsap.set(frames[0], { autoAlpha: 1, scale: 1 });
+      gsap.set(frames, { autoAlpha: 0 });
+      gsap.set(copies, { autoAlpha: 0, y: 18 });
+      gsap.set(images, { scale: 1.015, xPercent: 0, yPercent: 0 });
+
+      gsap.set(frames[0], { autoAlpha: 1 });
       gsap.set(copies[0], { autoAlpha: 1, y: 0 });
 
       const mobile = window.matchMedia("(max-width: 720px)").matches;
-      const scrollPerScene = mobile ? window.innerHeight * 0.78 : window.innerHeight * 0.92;
+      const scrollPerScene = mobile ? window.innerHeight * 1.02 : window.innerHeight * 1.18;
+      const sceneSpacing = 1.25;
 
       const timeline = gsap.timeline({
         defaults: { ease: "none" },
@@ -122,10 +125,11 @@ export default function ArrivalJourney() {
           trigger: root.current,
           start: "top top",
           end: () => `+=${scrollPerScene * (scenes.length - 1)}`,
-          scrub: 0.75,
+          scrub: 1.35,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          fastScrollEnd: false,
           onUpdate: (self) => {
             const index = Math.min(
               scenes.length - 1,
@@ -143,61 +147,74 @@ export default function ArrivalJourney() {
         },
       });
 
-      scenes.slice(1).forEach((scene, index) => {
-        const next = index + 1;
-        const at = next;
+      scenes.forEach((_, index) => {
+        const sceneStart = index * sceneSpacing;
+        const image = images[index];
+
+        if (image) {
+          timeline.fromTo(
+            image,
+            {
+              scale: index === 0 ? 1.015 : 1.005,
+              xPercent: index % 2 === 0 ? -0.35 : 0.35,
+              yPercent: 0.15,
+            },
+            {
+              scale: 1.075,
+              xPercent: index % 2 === 0 ? 0.45 : -0.45,
+              yPercent: -0.3,
+              duration: sceneSpacing + 0.42,
+              ease: "none",
+            },
+            sceneStart
+          );
+        }
+
+        if (index === 0) return;
+
+        const transitionStart = sceneStart - 0.72;
 
         timeline
           .to(
-            copies[next - 1],
-            { autoAlpha: 0, y: -22, duration: 0.2 },
-            at - 0.36
+            copies[index - 1],
+            {
+              autoAlpha: 0,
+              y: -12,
+              duration: 0.34,
+              ease: "power1.inOut",
+            },
+            transitionStart
           )
           .to(
-            frames[next - 1],
+            frames[index - 1],
             {
               autoAlpha: 0,
-              scale: scenes[next - 1].zoom ? 1.17 : 1.1,
-              duration: 0.55,
+              duration: 0.92,
+              ease: "sine.inOut",
             },
-            at - 0.42
+            transitionStart
           )
           .fromTo(
-            frames[next],
-            {
-              autoAlpha: 0,
-              scale: scene.zoom ? 1.16 : 1.07,
-            },
+            frames[index],
+            { autoAlpha: 0 },
             {
               autoAlpha: 1,
-              scale: 1,
-              duration: 0.66,
+              duration: 0.92,
+              ease: "sine.inOut",
             },
-            at - 0.4
+            transitionStart
           )
           .fromTo(
-            copies[next],
-            { autoAlpha: 0, y: 28 },
-            { autoAlpha: 1, y: 0, duration: 0.34 },
-            at - 0.12
+            copies[index],
+            { autoAlpha: 0, y: 14 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.5,
+              ease: "power2.out",
+            },
+            transitionStart + 0.48
           );
-      });
-
-      frames.forEach((frame, index) => {
-        const image = frame.querySelector("img");
-        if (!image) return;
-
-        gsap.to(image, {
-          xPercent: index % 2 === 0 ? 1.8 : -1.8,
-          yPercent: index % 3 === 0 ? 1.2 : -0.8,
-          ease: "none",
-          scrollTrigger: {
-            trigger: root.current,
-            start: "top top",
-            end: () => `+=${scrollPerScene * (scenes.length - 1)}`,
-            scrub: 1.3,
-          },
-        });
       });
     }, root);
 
@@ -207,12 +224,15 @@ export default function ArrivalJourney() {
   return (
     <section className="cinema" id="journey" ref={root}>
       <div className="cinema-stage">
-        {scenes.map((scene) => (
+        {scenes.map((scene, index) => (
           <div className="cinema-frame" key={scene.number}>
             <img
               src={scene.image}
               alt={`Hotel Lobelia — ${scene.label}`}
               style={{ objectPosition: scene.position }}
+              loading={index < 3 ? "eager" : "lazy"}
+              decoding="async"
+              fetchPriority={index < 2 ? "high" : "auto"}
             />
             <div className="cinema-shade" />
           </div>
