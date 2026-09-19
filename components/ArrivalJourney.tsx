@@ -13,17 +13,17 @@ const scenes = [
     eyebrow: "Bole · Addis Ababa",
     title: "Your stay begins before you step inside.",
     copy: "A calm base in Bole, only minutes from Addis Ababa Bole International Airport.",
-    image: "https://www.hotellobeliaaddis.com/img/gallery/exterior--surroundings/1.jpg",
-    position: "50% 46%",
+    image: "sequence/01-exterior-wide.png",
+    position: "50% 50%",
   },
   {
     number: "02",
     label: "Approach",
     eyebrow: "Come closer",
     title: "Leave the street behind.",
-    copy: "As you approach the entrance, the pace of the city starts to fall away.",
-    image: "https://www.hotellobeliaaddis.com/img/gallery/exterior--surroundings/6.jpg",
-    position: "50% 58%",
+    copy: "As you approach the hotel, the pace of the city starts to fall away.",
+    image: "sequence/02-exterior-approach.png",
+    position: "50% 50%",
   },
   {
     number: "03",
@@ -31,8 +31,8 @@ const scenes = [
     eyebrow: "The front door",
     title: "A warm welcome is waiting.",
     copy: "The entrance becomes the transition point between busy Bole and a quieter place to stay.",
-    image: "https://www.hotellobeliaaddis.com/img/gallery/exterior--surroundings/6.jpg",
-    position: "50% 76%",
+    image: "sequence/03-entrance-close.png",
+    position: "50% 50%",
     zoom: true,
   },
   {
@@ -40,8 +40,8 @@ const scenes = [
     label: "Inside",
     eyebrow: "Step in",
     title: "The light changes. The mood changes.",
-    copy: "Warm interiors, polished floors and a reception team ready to make arrival simple.",
-    image: "https://www.hotellobeliaaddis.com/img/gallery/lobby--reception-area/1.jpg",
+    copy: "Warm interiors and polished details make arrival feel easy.",
+    image: "sequence/04-inside-entrance.png",
     position: "50% 50%",
   },
   {
@@ -50,35 +50,45 @@ const scenes = [
     eyebrow: "Welcome to Lobelia",
     title: "Settle in before you head upstairs.",
     copy: "Pause at reception, ask what you need, then continue deeper into the hotel.",
-    image: "https://www.hotellobeliaaddis.com/img/gallery/lobby--reception-area/5.jpg",
+    image: "sequence/05-lobby-reception.png",
     position: "50% 50%",
   },
   {
     number: "06",
-    label: "Upstairs",
+    label: "Corridor",
     eyebrow: "Toward your room",
     title: "The city gets quieter with every step.",
     copy: "Move away from the lobby and toward the private part of your stay.",
-    image: "https://www.hotellobeliaaddis.com/img/gallery/lobby--reception-area/7.jpg",
+    image: "sequence/06-corridor.png",
     position: "50% 50%",
   },
   {
     number: "07",
-    label: "Room",
+    label: "Bedroom",
     eyebrow: "Your room is ready",
     title: "Drop your bags. Close the door.",
     copy: "Warm wood, soft light and a comfortable room designed for an easy night in Addis.",
-    image: "https://www.hotellobeliaaddis.com/img/rooms/deluxe-king---rooms/1.jpg",
-    position: "50% 48%",
+    image: "sequence/07-bedroom-wide.png",
+    position: "50% 50%",
   },
   {
     number: "08",
+    label: "Closer",
+    eyebrow: "Slow down",
+    title: "A softer, quieter ending to the day.",
+    copy: "The room becomes more intimate as the journey settles into rest.",
+    image: "sequence/08-bedroom-close.png",
+    position: "50% 50%",
+    zoom: true,
+  },
+  {
+    number: "09",
     label: "Rest",
     eyebrow: "Now, rest",
     title: "Tomorrow can wait.",
     copy: "The journey ends here—with a quiet room and a bed ready when you are.",
-    image: "https://www.hotellobeliaaddis.com/img/rooms/deluxe-king---rooms/3.jpg",
-    position: "48% 50%",
+    image: "sequence/09-bed-detail.png",
+    position: "50% 50%",
     zoom: true,
   },
 ];
@@ -122,6 +132,7 @@ export default function ArrivalJourney() {
               Math.round(self.progress * (scenes.length - 1))
             );
             setActive(index);
+
             if (progress.current) {
               gsap.set(progress.current, {
                 scaleX: self.progress,
@@ -212,7 +223,7 @@ export default function ArrivalJourney() {
             <span className="cinema-kicker">The Lobelia arrival</span>
             <strong>{scenes[active].label}</strong>
           </div>
-          <span>{scenes[active].number} / 08</span>
+          <span>{scenes[active].number} / 09</span>
         </div>
 
         <div className="cinema-copy-stack">
