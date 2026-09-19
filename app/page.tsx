@@ -1,5 +1,4 @@
 import Navigation from "@/components/Navigation";
-import Hero from "@/components/Hero";
 import BookingBar from "@/components/BookingBar";
 import ArrivalJourney from "@/components/ArrivalJourney";
 import Rooms from "@/components/Rooms";
@@ -14,10 +13,9 @@ export default function Home() {
     <main>
       <PageMotion />
       <Navigation />
-      <Hero />
-      <BookingBar />
 
       <ArrivalJourney />
+      <BookingBar />
 
       <section className="story section-pad" id="story">
         <div className="story-heading motion-up">
