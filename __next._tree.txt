@@ -1,4 +1,4 @@
-:HL["/Hotel-Lobelia/_next/static/chunks/0gm1z5xn4uaav.css","style"]
+:HL["/Hotel-Lobelia/_next/static/chunks/39wu1iksuorma.css","style"]
 :HL["https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500;600;700&display=swap","style"]
 :HL["https://www.hotellobeliaaddis.com/img/gallery/exterior--surroundings/4.jpg","image"]
 :HL["https://www.hotellobeliaaddis.com/img/gallery/lobby--reception-area/1.jpg","image"]
@@ -8,4 +8,4 @@
 :HL["https://www.hotellobeliaaddis.com/img/rooms/twin-room---rooms/1.jpg","image"]
 :HL["https://www.hotellobeliaaddis.com/img/gallery/exterior--surroundings/3.jpg","image"]
 :HL["https://www.hotellobeliaaddis.com/img/gallery/lobby--reception-area/7.jpg","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}},"staleTime":300,"buildId":"RPeAOsKnh4JuvNNB14IH_"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}},"staleTime":300,"buildId":"qoCzvIqdYjq7QKN0vhuuH"}
