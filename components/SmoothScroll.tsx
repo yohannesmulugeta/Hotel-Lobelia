@@ -2,29 +2,34 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({
-      duration: 1.05,
+      lerp: 0.075,
       smoothWheel: true,
-      wheelMultiplier: 0.9,
+      wheelMultiplier: 0.82,
       touchMultiplier: 1,
     });
 
-    let rafId = 0;
-
-    const raf = (time: number) => {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
+    const update = (time: number) => {
+      lenis.raf(time * 1000);
     };
 
-    rafId = requestAnimationFrame(raf);
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add(update);
+    gsap.ticker.lagSmoothing(0);
+
+    ScrollTrigger.refresh();
 
     return () => {
-      cancelAnimationFrame(rafId);
+      gsap.ticker.remove(update);
       lenis.destroy();
     };
   }, []);
