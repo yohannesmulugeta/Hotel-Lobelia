@@ -105,7 +105,7 @@ export default function ArrivalJourney() {
       const frames = gsap.utils.toArray<HTMLElement>(".cinema-frame");
       const copies = gsap.utils.toArray<HTMLElement>(".cinema-copy");
       const images = frames
-        .map((frame) => frame.querySelector("img"))
+        .map((frame) => frame.querySelector(".cinema-frame-main"))
         .filter(Boolean) as HTMLImageElement[];
 
       gsap.set(frames, { autoAlpha: 0 });
@@ -225,8 +225,20 @@ export default function ArrivalJourney() {
     <section className="cinema" id="journey" ref={root}>
       <div className="cinema-stage">
         {scenes.map((scene, index) => (
-          <div className="cinema-frame" key={scene.number}>
+          <div
+            className={`cinema-frame ${index === 0 ? "is-opening" : ""}`}
+            key={scene.number}
+          >
+            {index === 0 && (
+              <img
+                className="cinema-frame-backdrop"
+                src={scene.image}
+                alt=""
+                aria-hidden="true"
+              />
+            )}
             <img
+              className="cinema-frame-main"
               src={scene.image}
               alt={`Hotel Lobelia — ${scene.label}`}
               style={{ objectPosition: scene.position }}
