@@ -8,70 +8,184 @@ gsap.registerPlugin(ScrollTrigger);
 
 const scenes = [
   {
-    label: "Arrival",
     number: "01",
-    title: "The airport is only the beginning.",
-    copy: "Touch down nearby, take the complimentary shuttle and arrive without adding another journey to your day.",
-    image: "https://www.hotellobeliaaddis.com/img/gallery/exterior--surroundings/6.jpg",
+    label: "Outside",
+    eyebrow: "Bole · Addis Ababa",
+    title: "Your stay begins before you step inside.",
+    copy: "A calm base in Bole, only minutes from Addis Ababa Bole International Airport.",
+    image: "https://www.hotellobeliaaddis.com/img/gallery/exterior--surroundings/1.jpg",
+    position: "50% 46%",
   },
   {
-    label: "Welcome",
     number: "02",
-    title: "Step inside. Let the city soften.",
-    copy: "A calm reception and a friendly welcome shift the pace the moment you walk through the door.",
-    image: "https://www.hotellobeliaaddis.com/img/gallery/lobby--reception-area/5.jpg",
+    label: "Approach",
+    eyebrow: "Come closer",
+    title: "Leave the street behind.",
+    copy: "As you approach the entrance, the pace of the city starts to fall away.",
+    image: "https://www.hotellobeliaaddis.com/img/gallery/exterior--surroundings/6.jpg",
+    position: "50% 58%",
   },
   {
-    label: "Pause",
     number: "03",
-    title: "Coffee, a meal, a moment to reset.",
-    copy: "Settle into the shared spaces for Ethiopian coffee, breakfast or an easy meal before heading upstairs.",
-    image: "https://www.hotellobeliaaddis.com/img/gallery/anchor-bar--restaurant/8.jpg",
+    label: "Entrance",
+    eyebrow: "The front door",
+    title: "A warm welcome is waiting.",
+    copy: "The entrance becomes the transition point between busy Bole and a quieter place to stay.",
+    image: "https://www.hotellobeliaaddis.com/img/gallery/exterior--surroundings/6.jpg",
+    position: "50% 76%",
+    zoom: true,
   },
   {
-    label: "Rest",
     number: "04",
-    title: "Close the door. You are home for the night.",
-    copy: "Clean rooms, soft light and the comfort of knowing tomorrow starts only minutes from the airport.",
+    label: "Inside",
+    eyebrow: "Step in",
+    title: "The light changes. The mood changes.",
+    copy: "Warm interiors, polished floors and a reception team ready to make arrival simple.",
+    image: "https://www.hotellobeliaaddis.com/img/gallery/lobby--reception-area/1.jpg",
+    position: "50% 50%",
+  },
+  {
+    number: "05",
+    label: "Reception",
+    eyebrow: "Welcome to Lobelia",
+    title: "Settle in before you head upstairs.",
+    copy: "Pause at reception, ask what you need, then continue deeper into the hotel.",
+    image: "https://www.hotellobeliaaddis.com/img/gallery/lobby--reception-area/5.jpg",
+    position: "50% 50%",
+  },
+  {
+    number: "06",
+    label: "Upstairs",
+    eyebrow: "Toward your room",
+    title: "The city gets quieter with every step.",
+    copy: "Move away from the lobby and toward the private part of your stay.",
+    image: "https://www.hotellobeliaaddis.com/img/gallery/lobby--reception-area/7.jpg",
+    position: "50% 50%",
+  },
+  {
+    number: "07",
+    label: "Room",
+    eyebrow: "Your room is ready",
+    title: "Drop your bags. Close the door.",
+    copy: "Warm wood, soft light and a comfortable room designed for an easy night in Addis.",
     image: "https://www.hotellobeliaaddis.com/img/rooms/deluxe-king---rooms/1.jpg",
+    position: "50% 48%",
+  },
+  {
+    number: "08",
+    label: "Rest",
+    eyebrow: "Now, rest",
+    title: "Tomorrow can wait.",
+    copy: "The journey ends here—with a quiet room and a bed ready when you are.",
+    image: "https://www.hotellobeliaaddis.com/img/rooms/deluxe-king---rooms/3.jpg",
+    position: "48% 50%",
+    zoom: true,
   },
 ];
 
 export default function ArrivalJourney() {
   const root = useRef<HTMLElement>(null);
+  const progress = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
   useLayoutEffect(() => {
-    if (!root.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!root.current) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
 
     const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray<HTMLElement>(".journey-copy");
-      const images = gsap.utils.toArray<HTMLElement>(".journey-image");
+      const frames = gsap.utils.toArray<HTMLElement>(".cinema-frame");
+      const copies = gsap.utils.toArray<HTMLElement>(".cinema-copy");
 
-      gsap.set(images.slice(1), { autoAlpha: 0, scale: 1.05 });
-      gsap.set(images[0], { autoAlpha: 1, scale: 1 });
+      gsap.set(frames, { autoAlpha: 0, scale: 1.055 });
+      gsap.set(copies, { autoAlpha: 0, y: 26 });
+      gsap.set(frames[0], { autoAlpha: 1, scale: 1 });
+      gsap.set(copies[0], { autoAlpha: 1, y: 0 });
 
-      const activate = (index: number) => {
-        setActive(index);
+      const mobile = window.matchMedia("(max-width: 720px)").matches;
+      const scrollPerScene = mobile ? window.innerHeight * 0.78 : window.innerHeight * 0.92;
 
-        images.forEach((image, imageIndex) => {
-          gsap.to(image, {
-            autoAlpha: imageIndex === index ? 1 : 0,
-            scale: imageIndex === index ? 1 : 1.04,
-            duration: 0.9,
-            ease: "power3.out",
-            overwrite: true,
-          });
-        });
-      };
+      const timeline = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: root.current,
+          start: "top top",
+          end: () => `+=${scrollPerScene * (scenes.length - 1)}`,
+          scrub: 0.75,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const index = Math.min(
+              scenes.length - 1,
+              Math.round(self.progress * (scenes.length - 1))
+            );
+            setActive(index);
+            if (progress.current) {
+              gsap.set(progress.current, {
+                scaleX: self.progress,
+                transformOrigin: "left center",
+              });
+            }
+          },
+        },
+      });
 
-      cards.forEach((card, index) => {
-        ScrollTrigger.create({
-          trigger: card,
-          start: "top 60%",
-          end: "bottom 40%",
-          onEnter: () => activate(index),
-          onEnterBack: () => activate(index),
+      scenes.slice(1).forEach((scene, index) => {
+        const next = index + 1;
+        const at = next;
+
+        timeline
+          .to(
+            copies[next - 1],
+            { autoAlpha: 0, y: -22, duration: 0.2 },
+            at - 0.36
+          )
+          .to(
+            frames[next - 1],
+            {
+              autoAlpha: 0,
+              scale: scenes[next - 1].zoom ? 1.17 : 1.1,
+              duration: 0.55,
+            },
+            at - 0.42
+          )
+          .fromTo(
+            frames[next],
+            {
+              autoAlpha: 0,
+              scale: scene.zoom ? 1.16 : 1.07,
+            },
+            {
+              autoAlpha: 1,
+              scale: 1,
+              duration: 0.66,
+            },
+            at - 0.4
+          )
+          .fromTo(
+            copies[next],
+            { autoAlpha: 0, y: 28 },
+            { autoAlpha: 1, y: 0, duration: 0.34 },
+            at - 0.12
+          );
+      });
+
+      frames.forEach((frame, index) => {
+        const image = frame.querySelector("img");
+        if (!image) return;
+
+        gsap.to(image, {
+          xPercent: index % 2 === 0 ? 1.8 : -1.8,
+          yPercent: index % 3 === 0 ? 1.2 : -0.8,
+          ease: "none",
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top top",
+            end: () => `+=${scrollPerScene * (scenes.length - 1)}`,
+            scrub: 1.3,
+          },
         });
       });
     }, root);
@@ -80,41 +194,43 @@ export default function ArrivalJourney() {
   }, []);
 
   return (
-    <section className="journey" id="journey" ref={root}>
-      <div className="journey-intro">
-        <p className="eyebrow">Your stay, in four moments</p>
-        <h2>From touchdown<br />to lights out.</h2>
-        <p>Scroll through the arrival experience.</p>
-      </div>
-
-      <div className="journey-layout">
-        <div className="journey-stage">
-          {scenes.map((scene, index) => (
-            <div className="journey-image" key={scene.label}>
-              <img src={scene.image} alt={`Hotel Lobelia — ${scene.label}`} />
-              <div className="journey-vignette" />
-            </div>
-          ))}
-
-          <div className="journey-ui">
-            <span className="journey-active">{scenes[active].number}</span>
-            <div className="journey-progress">
-              {scenes.map((scene, index) => (
-                <i className={index <= active ? "is-active" : ""} key={scene.number} />
-              ))}
-            </div>
-            <span className="journey-total">04</span>
+    <section className="cinema" id="journey" ref={root}>
+      <div className="cinema-stage">
+        {scenes.map((scene) => (
+          <div className="cinema-frame" key={scene.number}>
+            <img
+              src={scene.image}
+              alt={`Hotel Lobelia — ${scene.label}`}
+              style={{ objectPosition: scene.position }}
+            />
+            <div className="cinema-shade" />
           </div>
+        ))}
+
+        <div className="cinema-top">
+          <div>
+            <span className="cinema-kicker">The Lobelia arrival</span>
+            <strong>{scenes[active].label}</strong>
+          </div>
+          <span>{scenes[active].number} / 08</span>
         </div>
 
-        <div className="journey-copies">
+        <div className="cinema-copy-stack">
           {scenes.map((scene) => (
-            <article className="journey-copy" key={scene.label}>
-              <span className="journey-label">{scene.number} / {scene.label}</span>
-              <h3>{scene.title}</h3>
+            <div className="cinema-copy" key={scene.number}>
+              <span>{scene.eyebrow}</span>
+              <h2>{scene.title}</h2>
               <p>{scene.copy}</p>
-            </article>
+            </div>
           ))}
+        </div>
+
+        <div className="cinema-bottom">
+          <span>Scroll to move through the hotel</span>
+          <div className="cinema-progress-track">
+            <div className="cinema-progress" ref={progress} />
+          </div>
+          <span>{scenes[active].label}</span>
         </div>
       </div>
     </section>

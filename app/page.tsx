@@ -17,6 +17,8 @@ export default function Home() {
       <Hero />
       <BookingBar />
 
+      <ArrivalJourney />
+
       <section className="story section-pad" id="story">
         <div className="story-heading motion-up">
           <p className="eyebrow">A personal welcome</p>
@@ -62,7 +64,6 @@ export default function Home() {
         </div>
       </section>
 
-      <ArrivalJourney />
       <Rooms />
       <Gallery />
       <Amenities />
