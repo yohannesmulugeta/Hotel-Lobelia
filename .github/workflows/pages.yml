@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -16,10 +16,13 @@ concurrency:
 
 jobs:
   build:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -40,7 +43,26 @@ jobs:
         with:
           path: ./out
 
+      - name: Publish static build to repository root
+        run: |
+          rm -rf index.html index.txt 404.html 404 _next _not-found sequence __next*
+          cp -a out/. .
+          touch .nojekyll
+          rm -rf out
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -f index.html index.txt 404.html 404 _next _not-found .nojekyll sequence __next*
+          if git diff --cached --quiet; then
+            echo "No static-site changes to commit."
+          else
+            git commit -m "Publish static site [skip actions]"
+            git push origin HEAD:main
+          fi
+
   deploy:
+    if: github.actor != 'github-actions[bot]'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
