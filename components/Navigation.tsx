@@ -7,7 +7,7 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -20,34 +20,41 @@ export default function Navigation() {
       <div className="nav-inner">
         <a href="#top" className="brand" onClick={close} aria-label="Hotel Lobelia home">
           <span className="brand-mark">L</span>
-          <span>Hotel Lobelia</span>
+          <span className="brand-copy">
+            <strong>Hotel Lobelia</strong>
+            <small>Addis Ababa</small>
+          </span>
         </a>
 
         <nav className={`nav-links ${open ? "is-open" : ""}`} aria-label="Primary">
-          <a href="#journey" onClick={close}>Journey</a>
+          <a href="#story" onClick={close}>Story</a>
+          <a href="#journey" onClick={close}>Experience</a>
           <a href="#rooms" onClick={close}>Rooms</a>
-          <a href="#inside" onClick={close}>Inside</a>
+          <a href="#inside" onClick={close}>Gallery</a>
           <a href="#contact" onClick={close}>Contact</a>
+        </nav>
+
+        <div className="nav-actions">
           <a
-            className="pill pill-bright"
+            className="nav-book"
             href="https://hotellobeliaaddis.reserve-online.net/"
             target="_blank"
             rel="noreferrer"
-            onClick={close}
           >
-            Book your stay ↗
+            Book now
+            <span>↗</span>
           </a>
-        </nav>
 
-        <button
-          className="menu-toggle"
-          type="button"
-          aria-expanded={open}
-          aria-label={open ? "Close navigation" : "Open navigation"}
-          onClick={() => setOpen((value) => !value)}
-        >
-          {open ? "×" : "☰"}
-        </button>
+          <button
+            className="menu-toggle"
+            type="button"
+            aria-expanded={open}
+            aria-label={open ? "Close navigation" : "Open navigation"}
+            onClick={() => setOpen((value) => !value)}
+          >
+            {open ? "×" : "☰"}
+          </button>
+        </div>
       </div>
     </header>
   );

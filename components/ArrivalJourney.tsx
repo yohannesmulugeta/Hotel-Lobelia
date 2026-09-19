@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -8,33 +8,38 @@ gsap.registerPlugin(ScrollTrigger);
 
 const scenes = [
   {
-    label: "01 / ARRIVE",
-    title: "From Bole to the front door.",
-    copy: "Land nearby, arrange your pickup and reach the hotel without turning arrival into another trip.",
+    label: "Arrival",
+    number: "01",
+    title: "The airport is only the beginning.",
+    copy: "Touch down nearby, take the complimentary shuttle and arrive without adding another journey to your day.",
     image: "https://www.hotellobeliaaddis.com/img/gallery/exterior--surroundings/6.jpg",
   },
   {
-    label: "02 / WELCOME",
-    title: "The city fades at reception.",
-    copy: "A warm, practical welcome gives the experience its first change of pace.",
+    label: "Welcome",
+    number: "02",
+    title: "Step inside. Let the city soften.",
+    copy: "A calm reception and a friendly welcome shift the pace the moment you walk through the door.",
     image: "https://www.hotellobeliaaddis.com/img/gallery/lobby--reception-area/5.jpg",
   },
   {
-    label: "03 / PAUSE",
-    title: "Coffee before the room.",
-    copy: "Move through the shared spaces slowly: food, coffee, conversation, then somewhere quiet.",
+    label: "Pause",
+    number: "03",
+    title: "Coffee, a meal, a moment to reset.",
+    copy: "Settle into the shared spaces for Ethiopian coffee, breakfast or an easy meal before heading upstairs.",
     image: "https://www.hotellobeliaaddis.com/img/gallery/anchor-bar--restaurant/8.jpg",
   },
   {
-    label: "04 / REST",
-    title: "And then, your room.",
-    copy: "The journey ends with a simple promise: close the door, settle in and let Addis wait outside.",
+    label: "Rest",
+    number: "04",
+    title: "Close the door. You are home for the night.",
+    copy: "Clean rooms, soft light and the comfort of knowing tomorrow starts only minutes from the airport.",
     image: "https://www.hotellobeliaaddis.com/img/rooms/deluxe-king---rooms/1.jpg",
   },
 ];
 
 export default function ArrivalJourney() {
   const root = useRef<HTMLElement>(null);
+  const [active, setActive] = useState(0);
 
   useLayoutEffect(() => {
     if (!root.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -43,29 +48,32 @@ export default function ArrivalJourney() {
       const cards = gsap.utils.toArray<HTMLElement>(".journey-copy");
       const images = gsap.utils.toArray<HTMLElement>(".journey-image");
 
-      gsap.set(images.slice(1), { autoAlpha: 0, scale: 1.06 });
+      gsap.set(images.slice(1), { autoAlpha: 0, scale: 1.05 });
+      gsap.set(images[0], { autoAlpha: 1, scale: 1 });
+
+      const activate = (index: number) => {
+        setActive(index);
+
+        images.forEach((image, imageIndex) => {
+          gsap.to(image, {
+            autoAlpha: imageIndex === index ? 1 : 0,
+            scale: imageIndex === index ? 1 : 1.04,
+            duration: 0.9,
+            ease: "power3.out",
+            overwrite: true,
+          });
+        });
+      };
 
       cards.forEach((card, index) => {
         ScrollTrigger.create({
           trigger: card,
-          start: "top 58%",
-          end: "bottom 42%",
+          start: "top 60%",
+          end: "bottom 40%",
           onEnter: () => activate(index),
           onEnterBack: () => activate(index),
         });
       });
-
-      function activate(index: number) {
-        images.forEach((image, imageIndex) => {
-          gsap.to(image, {
-            autoAlpha: imageIndex === index ? 1 : 0,
-            scale: imageIndex === index ? 1 : 1.035,
-            duration: 0.75,
-            ease: "power2.out",
-            overwrite: true,
-          });
-        });
-      }
     }, root);
 
     return () => ctx.revert();
@@ -73,29 +81,36 @@ export default function ArrivalJourney() {
 
   return (
     <section className="journey" id="journey" ref={root}>
-      <div className="section-intro">
-        <p className="eyebrow">One scroll. One continuous arrival.</p>
-        <h2>Move from the street to the room.</h2>
-        <p>
-          This section is the foundation for the final cinematic sequence. We can later replace these fades with an image-sequence camera transition.
-        </p>
+      <div className="journey-intro">
+        <p className="eyebrow">Your stay, in four moments</p>
+        <h2>From touchdown<br />to lights out.</h2>
+        <p>Scroll through the arrival experience.</p>
       </div>
 
       <div className="journey-layout">
         <div className="journey-stage">
           {scenes.map((scene, index) => (
-            <div className="journey-image" key={scene.label} style={{ zIndex: scenes.length - index }}>
-              <img src={scene.image} alt="" />
+            <div className="journey-image" key={scene.label}>
+              <img src={scene.image} alt={`Hotel Lobelia — ${scene.label}`} />
               <div className="journey-vignette" />
-              <span className="journey-counter">0{index + 1} / 04</span>
             </div>
           ))}
+
+          <div className="journey-ui">
+            <span className="journey-active">{scenes[active].number}</span>
+            <div className="journey-progress">
+              {scenes.map((scene, index) => (
+                <i className={index <= active ? "is-active" : ""} key={scene.number} />
+              ))}
+            </div>
+            <span className="journey-total">04</span>
+          </div>
         </div>
 
         <div className="journey-copies">
           {scenes.map((scene) => (
             <article className="journey-copy" key={scene.label}>
-              <span>{scene.label}</span>
+              <span className="journey-label">{scene.number} / {scene.label}</span>
               <h3>{scene.title}</h3>
               <p>{scene.copy}</p>
             </article>
